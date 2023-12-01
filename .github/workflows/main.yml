@@ -15,10 +15,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Python3
+        uses: actions/setup-python@v2
         with:
-          node-version: 14
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install PyGithub==1.58
 
       - name: Replicate Issue
         run: |
@@ -28,18 +33,5 @@ jobs:
           ISSUE_STATE=$(echo "${{ github.event.issue.state }}")
           
           ENTERPRISE_REPO="Rajat-Agrawal/test_issue_sync"
-          
-          # Check if the issue has already been replicated
-          if gh issue view $ENTERPRISE_REPO $ISSUE_NUMBER &>/dev/null; then
-            echo "Issue #$ISSUE_NUMBER is already replicated in the enterprise repo."
-          else
-            # Replicate the issue
-            gh issue create $ENTERPRISE_REPO --title "$ISSUE_TITLE" --body "$ISSUE_BODY"
-            echo "Issue #$ISSUE_NUMBER replicated in the enterprise repo."
-          fi
 
-          # Close the corresponding issue in the enterprise repo if it's closed in the public repo
-          if [ "$ISSUE_STATE" == "closed" ]; then
-            gh issue close $ENTERPRISE_REPO $ISSUE_NUMBER
-            echo "Issue #$ISSUE_NUMBER closed in the enterprise repo."
-          fi
+          print(f"issue number {ISSUE_NUMBER}, title {ISSUE_TITLE}, body {ISSUE_BODY}")
