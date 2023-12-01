@@ -30,6 +30,7 @@ jobs:
           ISSUE_NUMBER=$(echo "${{ github.event.issue.number }}")
           ISSUE_TITLE=$(echo "${{ github.event.issue.title }}")
           ISSUE_BODY=$(echo "${{ github.event.issue.body }}")
+          ISSUE_LABELS=$(echo "${{ github.event.issue.labels }}")
           ISSUE_STATE=$(echo "${{ github.event.issue.state }}")
           
           ENTERPRISE_REPO="Rajat-Agrawal/test_issue_sync"
@@ -38,4 +39,42 @@ jobs:
           import os
           from github import Github
 
-          print(f"issue number {$ISSUE_NUMBER}")
+          GH_TOKEN = os.environ.get("GH_TOKEN")
+          FILTER_TOPIC = os.environ.get("FILTER_TOPIC")
+          GHE_TOKEN = os.environ.get("GHE_TOKEN")
+
+          # Variables  
+          pri_repo = "Rajat-Agrawal/test_issue_sync"
+          body_template = "Reference for external issue: "
+          skipReference = False
+
+          # Authentication
+          ge = Github(GH_TOKEN)
+          ghe = Github(base_url="https://github.ibm.com/api/v3", login_or_token=GHE_TOKEN)
+
+          # Don't duplicate existing issues
+          for pri_issue in pri_repo:
+            if pri_issue.title == ISSUE_TITLE:
+              print(f"Issue with title: {ISSUE_TITLE} already moved. Skipping...")
+              skipReference = True
+            break
+
+          if any("internal-synced" in label.name for label in ISSUE_LABELS):
+            skipReference = True
+            print(
+                f"This issue with title {ISSUE_TITLE} has been previously synced. Consider closing external issues. Skipping..."
+            )
+
+          # Create reference
+          if not skipReference:
+            pri_repo.create_issue(
+              title=issue.title,
+              body=body_template + issue.html_url,
+              labels=["external-reference"],
+            )
+            print(f"Creating reference for {issue.title}")
+            # Add a label to the external issue indicating it's been synced internally.
+            issue.add_to_labels("internal-synced")
+
+          print("Sync completed")
+          EOF
