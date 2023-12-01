@@ -38,14 +38,16 @@ jobs:
           ENTERPRISE_REPO="Rajat-Agrawal/test_issue_sync"
 
           python - <<EOF
-          import os
+          import subprocess as sp
           from github import Github
 
           GH_TOKEN = os.environ.get("GH_TOKEN")
           FILTER_TOPIC = os.environ.get("FILTER_TOPIC")
           GHE_TOKEN = os.environ.get("GHE_TOKEN")
-          ISSUE_TITLE=$(echo "${{ github.event.issue.title }}")
-          ISSUE_LABELS=$(echo "${{ github.event.issue.labels }}")
+          ISSUE_TITLE = sp.getoutput('echo "${{ github.event.issue.title }}"')
+          ISSUE_LABELS = sp.getoutput('echo "${{ github.event.issue.labels }}"')
+
+          print(ISSUE_TITLE)
 
           # Variables  
           pri_repo = "Rajat-Agrawal/test_issue_sync"
