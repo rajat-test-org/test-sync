@@ -34,4 +34,8 @@ jobs:
           
           ENTERPRISE_REPO="Rajat-Agrawal/test_issue_sync"
 
-          print(f"issue number {ISSUE_NUMBER}, title {ISSUE_TITLE}, body {ISSUE_BODY}")
+          python - <<EOF
+          import os
+          from github import Github
+
+          print(f"issue number {ISSUE_NUMBER}")
