@@ -38,4 +38,4 @@ jobs:
           import os
           from github import Github
 
-          print(f"issue number {ISSUE_NUMBER}")
+          print(f"issue number {$ISSUE_NUMBER}")
