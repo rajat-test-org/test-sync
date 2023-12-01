@@ -54,25 +54,25 @@ jobs:
 
           # Don't duplicate existing issues
           for pri_issue in pri_repo:
-            if pri_issue.title == ISSUE_TITLE:
-              print(f"Issue with title: {ISSUE_TITLE} already moved. Skipping...")
+            if pri_issue.title == $ISSUE_TITLE:
+              print(f"Issue with title: {$ISSUE_TITLE} already moved. Skipping...")
               skipReference = True
             break
 
-          if any("internal-synced" in label.name for label in ISSUE_LABELS):
+          if any("internal-synced" in label.name for label in $ISSUE_LABELS):
             skipReference = True
             print(
-                f"This issue with title {ISSUE_TITLE} has been previously synced. Consider closing external issues. Skipping..."
+                f"This issue with title {$ISSUE_TITLE} has been previously synced. Consider closing external issues. Skipping..."
             )
 
           # Create reference
           if not skipReference:
             pri_repo.create_issue(
-              title=issue.title,
-              body=body_template + issue.html_url,
+              title=$ISSUE_TITLE,
+              body=body_template + $ISSUE_BODY,
               labels=["external-reference"],
             )
-            print(f"Creating reference for {issue.title}")
+            print(f"Creating reference for {$ISSUE_TITLE}")
             # Add a label to the external issue indicating it's been synced internally.
             issue.add_to_labels("internal-synced")
 
