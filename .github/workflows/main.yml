@@ -49,6 +49,7 @@ jobs:
           ISSUE_LABELS = sp.getoutput('echo "${{ github.event.issue.labels }}"')
 
           print(ISSUE_TITLE)
+          print(ISSUE_LABELS)
 
           # Variables  
           pri_repo = "Rajat-Agrawal/test_issue_sync"
@@ -66,7 +67,7 @@ jobs:
               skipReference = True
             break
 
-          if any("internal-synced" in label.name for label in ISSUE_LABELS):
+          if ("internal-synced" in ISSUE_LABELS):
             skipReference = True
             print(
                 f"This issue with title {ISSUE_TITLE} has been previously synced. Consider closing external issues. Skipping..."
