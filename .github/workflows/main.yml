@@ -1,0 +1,52 @@
+name: Replicate Issues
+
+on:
+  issues:
+    types:
+      - opened
+      - reopened
+      - closed
+
+jobs:
+  replicate-issues:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository -y https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh
+
+      - name: Replicate Issue
+        run: |
+          ISSUE_NUMBER=$(echo "${{ github.event.issue.number }}")
+          ISSUE_TITLE=$(echo "${{ github.event.issue.title }}")
+          ISSUE_BODY=$(echo "${{ github.event.issue.body }}")
+          ISSUE_STATE=$(echo "${{ github.event.issue.state }}")
+          
+          ENTERPRISE_REPO="Rajat-Agrawal/test_issue_sync"
+          
+          # Check if the issue has already been replicated
+          if gh issue view $ENTERPRISE_REPO $ISSUE_NUMBER &>/dev/null; then
+            echo "Issue #$ISSUE_NUMBER is already replicated in the enterprise repo."
+          else
+            # Replicate the issue
+            gh issue create $ENTERPRISE_REPO --title "$ISSUE_TITLE" --body "$ISSUE_BODY"
+            echo "Issue #$ISSUE_NUMBER replicated in the enterprise repo."
+          fi
+
+          # Close the corresponding issue in the enterprise repo if it's closed in the public repo
+          if [ "$ISSUE_STATE" == "closed" ]; then
+            gh issue close $ENTERPRISE_REPO $ISSUE_NUMBER
+            echo "Issue #$ISSUE_NUMBER closed in the enterprise repo."
+          fi
