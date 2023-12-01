@@ -52,13 +52,14 @@ jobs:
           print(ISSUE_LABELS)
 
           # Variables  
-          pri_repo = "Rajat-Agrawal/test_issue_sync"
+          private_repo = "Rajat-Agrawal/test_issue_sync"
           body_template = "Reference for external issue: "
           skipReference = False
 
           # Authentication
           ge = Github(GH_TOKEN)
           ghe = Github(base_url="https://github.ibm.com/api/v3", login_or_token=GHE_TOKEN)
+          pri_repo = ghe.get_repo(private_repo)
 
           # Don't duplicate existing issues
           for pri_issue in pri_repo:
