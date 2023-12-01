@@ -9,6 +9,8 @@ on:
 
 jobs:
   replicate-issues:
+    if: ${{ !github.event.issue.pull_request }}
+    
     runs-on: ubuntu-latest
 
     steps:
@@ -69,7 +71,7 @@ jobs:
           if not skipReference:
             pri_repo.create_issue(
               title=$ISSUE_TITLE,
-              body=body_template + $ISSUE_BODY,
+              body=$ISSUE_BODY,
               labels=["external-reference"],
             )
             print(f"Creating reference for {$ISSUE_TITLE}")
