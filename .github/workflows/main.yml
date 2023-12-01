@@ -71,7 +71,7 @@ jobs:
           if not skipReference:
             pri_repo.create_issue(
               title=$ISSUE_TITLE,
-              body=$ISSUE_BODY,
+              body= "a" + $ISSUE_BODY,
               labels=["external-reference"],
             )
             print(f"Creating reference for {$ISSUE_TITLE}")
