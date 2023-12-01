@@ -29,11 +29,11 @@ jobs:
 
       - name: Replicate Issue
         run: |
-          ISSUE_NUMBER=$(echo "${{ github.event.issue.number }}")
-          ISSUE_TITLE=$(echo "${{ github.event.issue.title }}")
-          ISSUE_BODY=$(echo "${{ github.event.issue.body }}")
-          ISSUE_LABELS=$(echo "${{ github.event.issue.labels }}")
-          ISSUE_STATE=$(echo "${{ github.event.issue.state }}")
+          # ISSUE_NUMBER=$(echo "${{ github.event.issue.number }}")
+          # ISSUE_TITLE=$(echo "${{ github.event.issue.title }}")
+          # ISSUE_BODY=$(echo "${{ github.event.issue.body }}")
+          # ISSUE_LABELS=$(echo "${{ github.event.issue.labels }}")
+          # ISSUE_STATE=$(echo "${{ github.event.issue.state }}")
           
           ENTERPRISE_REPO="Rajat-Agrawal/test_issue_sync"
 
@@ -44,6 +44,8 @@ jobs:
           GH_TOKEN = os.environ.get("GH_TOKEN")
           FILTER_TOPIC = os.environ.get("FILTER_TOPIC")
           GHE_TOKEN = os.environ.get("GHE_TOKEN")
+          ISSUE_TITLE=github.event.issue.number
+          ISSUE_LABELS=github.event.issue.labels
 
           # Variables  
           pri_repo = "Rajat-Agrawal/test_issue_sync"
